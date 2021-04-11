@@ -38,8 +38,13 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
+  const db = await openDB();
+  const microphones = await db.all('select * from microphone');
+  const paths = microphones.map((a) => {
+    return { params: { id: a.id.toString() } };
+  });
   return {
     fallback: true,
-    paths: [{ params: { id: '6' } }, { params: { id: '7' } }],
+    paths,
   };
 };
